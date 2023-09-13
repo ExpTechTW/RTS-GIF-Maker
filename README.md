@@ -4,6 +4,7 @@
 ------
 
 - RTS GIF 製作工具
+![output](https://github.com/ExpTechTW/RTS-GIF-Maker/assets/44525760/fa644258-edab-42cc-bf1b-897f89bb078d)
 
 ## 索引
 - [貢獻者](#貢獻者)
