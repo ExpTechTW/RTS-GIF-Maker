@@ -152,8 +152,16 @@ class SendWebhook:
             return
 
         if not os.path.exists(self.first_5_timestamp_folder):
-            with open(self.first_5_timestamp_folder, "w") as f:
-                json.dump(self.get_first_5_timestamp(), f, ensure_ascii=False, indent=4)
+            got_response = self.get_response_with_retry()
+            if got_response:
+                first_5_ids = self.get_first_5_timestamp(got_response)
+                with open(self.first_5_timestamp_folder, "w") as f:
+                    json.dump(first_5_ids, f, ensure_ascii=False, indent=4)
+                self.first_5_timestamp = first_5_ids
+            else:
+                self.log("無法獲取初始資料，創建空的 JSON 文件", 2)
+                with open(self.first_5_timestamp_folder, "w") as f:
+                    json.dump([], f, ensure_ascii=False, indent=4)
         else:
             self.first_5_timestamp = self.get_data_from_json()
 
@@ -225,7 +233,7 @@ class SendWebhook:
 
                 while retry_count < max_retries:
                     try:
-                        response = requests.get(f"https://api-2.exptech.dev/api/v1/trem/rts-image/{timestamp}",)
+                        response = requests.get(f"https://api-1.exptech.dev/api/v1/trem/rts-image/{timestamp}",)
 
                         if response.status_code == 200:
                             result_image = self.raw.copy()
